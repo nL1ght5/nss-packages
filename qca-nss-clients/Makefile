@@ -308,7 +308,8 @@ define KernelPackage/qca-nss-drv-lag-mgr
 	   +TARGET_ipq_ipq60xx:kmod-qca-nss-drv-vlan-mgr \
 	   +TARGET_ipq_ipq60xx_64:kmod-qca-nss-drv-vlan-mgr \
 	   +TARGET_ipq60xx:kmod-qca-nss-drv-vlan-mgr \
-	   +PACKAGE_kmod-qca-nss-drv:kmod-qca-nss-drv
+	   +PACKAGE_kmod-qca-nss-drv:kmod-qca-nss-drv \
+	   +kmod-bonding
   FILES:=$(PKG_BUILD_DIR)/lag/qca-nss-lag-mgr.ko
   AUTOLOAD:=$(call AutoLoad,51,qca-nss-lag-mgr)
 endef
