@@ -7,7 +7,7 @@ PKG_RELEASE:=$(AUTORELEASE)
 PKG_SOURCE_URL:=https://git.codelinaro.org/clo/qsdk/oss/lklm/nss-drv.git
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_DATE:=2020-03-20
-PKG_SOURCE_VERSION:=3cfb9f43
+PKG_SOURCE_VERSION:=3cfb9f43536e77ae05a141cce18a242b85e834ab
 PKG_MIRROR_HASH:=87ab6dab1c0a441b2df95b6c5d992f86a07c6ecd69a0d13eba35014fadaf98d8
 PKG_BUILD_PARALLEL:=1
 
@@ -264,7 +264,7 @@ ifeq ($(CONFIG_TARGET_BOARD), "ipq806x")
 endif
 
 define Build/Configure
-	$(CP) $(TOPDIR)/$(SOURCE)/files/nss-firmware/nss_fw_version.h $(PKG_BUILD_DIR)/exports/nss_fw_version.h
+	$(CP) $(SOURCE)/files/nss-firmware/nss_fw_version.h $(PKG_BUILD_DIR)/exports/nss_fw_version.h
 	sed -i "s/define NSS_FW_VERSION_MAJOR.*/define NSS_FW_VERSION_MAJOR 11/" $(PKG_BUILD_DIR)/exports/nss_fw_version.h
 	sed -i "s/define NSS_FW_VERSION_MINOR.*/define NSS_FW_VERSION_MINOR $(TARGET_NSS_MINOR_VERSION)/" $(PKG_BUILD_DIR)/exports/nss_fw_version.h
 	$(LN) arch/nss_$(SOC).h $(PKG_BUILD_DIR)/exports/nss_arch.h
