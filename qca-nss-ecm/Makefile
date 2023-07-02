@@ -13,8 +13,6 @@ PKG_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/package.mk
 
-LOCAL_VARIANT=$(patsubst qca-nss-ecm-%,%,$(patsubst qca-nss-ecm-%,%,$(BUILD_VARIANT)))
-
 ifeq ($(CONFIG_QCA_NSS_ECM_EXAMPLES_PCC),y)
        ECM_MAKE_OPTS+=ECM_CLASSIFIER_PCC_ENABLE=y
        FILES_EXAMPLES=$(PKG_BUILD_DIR)/examples/ecm_pcc_test.ko
@@ -33,7 +31,7 @@ ifeq ($(CONFIG_QCA_NSS_ECM_OVS),y)
        FILES_EXAMPLES+=$(PKG_BUILD_DIR)/examples/ecm_ovs.ko
 endif
 
-define KernelPackage/qca-nss-ecm/Default
+define KernelPackage/qca-nss-ecm
   SECTION:=kernel
   CATEGORY:=Kernel modules
   SUBMENU:=Network Support
@@ -45,14 +43,14 @@ define KernelPackage/qca-nss-ecm/Default
 	CONFIG_NF_CONNTRACK_DSCPREMARK_EXT=y
   MENU:=1
   PROVIDES:=kmod-qca-nss-ecm
-  $(call AddDepends/qca-nss-ecm/Default)
+  $(call AddDepends/qca-nss-ecm)
 endef
 
-define KernelPackage/qca-nss-ecm/Description/Default
+define KernelPackage/qca-nss-ecm/Description
 This package contains the QCA NSS Enhanced Connection Manager
 endef
 
-define AddDepends/qca-nss-ecm/Default
+define AddDepends/qca-nss-ecm
   SUBMENU:=Network Support
   DEPENDS:= \
 	+@NSS_DRV_IPV6_ENABLE \
@@ -64,10 +62,13 @@ define AddDepends/qca-nss-ecm/Default
 	+@NSS_DRV_WIFI_ENABLE \
 	+kmod-qca-nss-drv \
 	+kmod-nf-conntrack \
-	+kmod-ppp +kmod-pppoe +kmod-pptp
+	+kmod-ppp +kmod-pppoe +kmod-pptp \
+	+PACKAGE_kmod-qca-mcs:kmod-qca-mcs \
+	+PACKAGE_kmod-pppol2tp:kmod-pppol2tp \
+	+PACKAGE_kmod-qca-nat46:kmod-qca-nat46
 endef
 
-define KernelPackage/qca-nss-ecm/Default/install
+define KernelPackage/qca-nss-ecm/install
 	$(INSTALL_DIR) $(1)/etc/firewall.d $(1)/etc/init.d $(1)/usr/bin $(1)/lib/netifd/offload $(1)/etc/config $(1)/etc/uci-defaults $(1)/etc/sysctl.d
 	$(INSTALL_DATA) ./files/qca-nss-ecm.firewall $(1)/etc/firewall.d/qca-nss-ecm
 	$(INSTALL_BIN) ./files/qca-nss-ecm.init $(1)/etc/init.d/qca-nss-ecm
@@ -84,103 +85,9 @@ ifeq ($(CONFIG_KERNEL_IPQ_MEM_PROFILE),512)
 endif
 endef
 
-define KernelPackage/qca-nss-ecm-standard
-$(call KernelPackage/qca-nss-ecm/Default)
-  DEPENDS+= \
-	+PACKAGE_kmod-qca-mcs:kmod-qca-mcs \
-	+PACKAGE_kmod-pppol2tp:kmod-pppol2tp \
-	+PACKAGE_kmod-qca-nat46:kmod-qca-nat46
-  VARIANT:=standard
-endef
-
-define KernelPackage/qca-nss-ecm-standard/description
-  $(call KernelPackage/qca-nss-ecm/Description/Default)
-endef
-
-define KernelPackage/qca-nss-ecm-standard/install
-$(call KernelPackage/qca-nss-ecm/Default/install, $(1))
-endef
-
-# Variant with additional features enabled for premium profile
-define KernelPackage/qca-nss-ecm-premium/Default
-$(call KernelPackage/qca-nss-ecm/Default)
-  TITLE+:= (with premium features)
-  VARIANT:=premium
-  DEPENDS+:=+kmod-qca-hyfi-bridge +kmod-qca-mcs +kmod-qca-nat46
-ifeq ($(CONFIG_TARGET_ipq_ipq40xx)$(CONFIG_TARGET_ipq40xx),)
-  DEPENDS+=+kmod-bonding
-endif
-endef
-
-define KernelPackage/qca-nss-ecm-premium/Description/Default
-$(call KernelPackage/qca-nss-ecm/Description/Default)
-with the premium features enabled
-endef
-
-define KernelPackage/qca-nss-ecm-premium/Default/install
-$(call KernelPackage/qca-nss-ecm/install)
-endef
-
-define KernelPackage/qca-nss-ecm-premium
-$(call KernelPackage/qca-nss-ecm-premium/Default)
-endef
-
-define KernelPackage/qca-nss-ecm-premium/description
-$(call KernelPackage/qca-nss-ecm-premium/Description/Default)
-endef
-
-define KernelPackage/qca-nss-ecm-premium/install
-$(call KernelPackage/qca-nss-ecm-standard/install, $(1))
-endef
-
-# Variant with additional features enabled for noload profile
-define KernelPackage/qca-nss-ecm-noload
-  $(call KernelPackage/qca-nss-ecm/Default)
-  TITLE+:= (with noload features)
-  PROVIDES:=kmod-qca-nss-ecm
-  VARIANT:=noload
-ifeq ($(CONFIG_TARGET_ipq_ipq40xx)$(CONFIG_TARGET_ipq40xx),)
-  DEPENDS+=+kmod-bonding
-endif
-endef
-
-define KernelPackage/qca-nss-ecm-noload/description
-  $(call KernelPackage/qca-nss-ecm/Description/Default)
-  When selected, this package installs the driver but does not load it at init.
-endef
-
-define KernelPackage/qca-nss-ecm-noload/install
-$(call KernelPackage/qca-nss-ecm/Default/install, $(1))
-	#
-	# Remove the START line from the init script, so that the symlink
-	# in the /etc/rc.d directory is not created.
-	#
-	sed -i '/START=/d' $(1)/etc/init.d/qca-nss-ecm
-endef
-
-define KernelPackage/qca-nss-ecm-premium-noload
-  $(call KernelPackage/qca-nss-ecm-premium/Default)
-  TITLE+:= (noload)
-  PROVIDES:=kmod-qca-nss-ecm-premium
-  VARIANT:=premium-noload
-endef
-
-define KernelPackage/qca-nss-ecm-premium-noload/description
-  $(call KernelPackage/qca-nss-ecm-premium/Description/Default)
-  When selected, this package installs the driver but does not load it at init.
-endef
-
-define KernelPackage/qca-nss-ecm-premium-noload/install
-$(call KernelPackage/qca-nss-ecm-premium/Default/install, $(1))
-endef
-
-define Build/InstallDev/qca-nss-ecm
+define Build/InstallDev
 	$(INSTALL_DIR) $(1)/usr/include/qca-nss-ecm
 	$(CP) $(PKG_BUILD_DIR)/exports/* $(1)/usr/include/qca-nss-ecm/
-endef
-
-define Build/InstallDev
-	$(call Build/InstallDev/qca-nss-ecm,$(1))
 endef
 
 EXTRA_CFLAGS+= \
@@ -190,8 +97,6 @@ EXTRA_CFLAGS+= \
 	-I$(STAGING_DIR)/usr/include/shortcut-fe \
 	-I$(STAGING_DIR)/usr/include/nat46
 
-ECM_MAKE_OPTS:=ECM_CLASSIFIER_HYFI_ENABLE=n
-ifeq ($(LOCAL_VARIANT),standard)
 ECM_MAKE_OPTS+=ECM_NON_PORTED_SUPPORT_ENABLE=y \
 		ECM_STATE_OUTPUT_ENABLE=y \
 		ECM_INTERFACE_VLAN_ENABLE=y \
@@ -200,11 +105,11 @@ ECM_MAKE_OPTS+=ECM_NON_PORTED_SUPPORT_ENABLE=y \
 		ECM_CLASSIFIER_NL_ENABLE=y \
 		ECM_TRACKER_DPI_SUPPORT_ENABLE=y \
 		ECM_DB_ADVANCED_STATS_ENABLE=y \
-		ECM_CLASSIFIER_EMESH_ENABLE=n
+		ECM_CLASSIFIER_EMESH_ENABLE=n \
+		ECM_CLASSIFIER_HYFI_ENABLE=n
 
 ifeq ($(CONFIG_TARGET_ipq_ipq40xx)$(CONFIG_TARGET_ipq40xx),)
 ECM_MAKE_OPTS+=ECM_INTERFACE_BOND_ENABLE=n
-endif
 endif
 
 ifneq ($(CONFIG_PACKAGE_kmod-qca-nat46),)
@@ -301,7 +206,7 @@ define Build/Compile
 		modules
 endef
 
-define KernelPackage/qca-nss-ecm-standard/config
+define KernelPackage/qca-nss-ecm/config
 menu "ECM Configuration"
 
 	config QCA_NSS_ECM_EXAMPLES_PCC
@@ -328,7 +233,4 @@ menu "ECM Configuration"
 endmenu
 endef
 
-$(eval $(call KernelPackage,qca-nss-ecm-noload))
-$(eval $(call KernelPackage,qca-nss-ecm-standard))
-$(eval $(call KernelPackage,qca-nss-ecm-premium-noload))
-$(eval $(call KernelPackage,qca-nss-ecm-premium))
+$(eval $(call KernelPackage,qca-nss-ecm))
