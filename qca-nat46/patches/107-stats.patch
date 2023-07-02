@@ -63,10 +63,10 @@ Signed-off-by: Pavithra R <pavir@codeaurora.org>
  static int nat46_netdev_up(struct net_device *dev)
  {
  	netif_start_queue(dev);
-@@ -64,8 +89,13 @@ static int nat46_netdev_down(struct net_
- 
- static netdev_tx_t nat46_netdev_xmit(struct sk_buff *skb, struct net_device *dev)
+@@ -66,8 +91,13 @@ static int nat46_netdev_down(struct net_
  {
+	int ret = 0;
+ 
 -	dev->stats.rx_packets++;
 -	dev->stats.rx_bytes += skb->len;
 +	struct pcpu_sw_netstats *tstats = get_cpu_ptr(dev->tstats);
@@ -77,9 +77,9 @@ Signed-off-by: Pavithra R <pavir@codeaurora.org>
 +	u64_stats_update_end(&tstats->syncp);
 +	put_cpu_ptr(tstats);
  	if(ETH_P_IP == ntohs(skb->protocol)) {
- 		nat46_ipv4_input(skb);
+ 		ret = nat46_ipv4_input(skb);
  	}
-@@ -77,22 +107,38 @@ static netdev_tx_t nat46_netdev_xmit(str
+@@ -81,22 +111,38 @@ static netdev_tx_t nat46_netdev_xmit(str
  }
  
  void nat46_netdev_count_xmit(struct sk_buff *skb, struct net_device *dev) {
@@ -124,7 +124,7 @@ Signed-off-by: Pavithra R <pavir@codeaurora.org>
  void *netdev_nat46_instance(struct net_device *dev) {
  	nat46_netdev_priv_t *priv = netdev_priv(dev);
  	return priv->nat46;
-@@ -116,6 +162,7 @@ static void nat46_netdev_setup(struct ne
+@@ -120,6 +166,7 @@ static void nat46_netdev_setup(struct ne
  	priv->nat46 = nat46;
  
  	dev->netdev_ops = &nat46_netdev_ops;

@@ -13,7 +13,7 @@ Signed-off-by: Pavithra R <pavir@codeaurora.org>
 
 --- a/nat46/modules/nat46-core.c
 +++ b/nat46/modules/nat46-core.c
-@@ -1972,6 +1972,7 @@ void ip6_update_csum(struct sk_buff * sk
+@@ -2076,6 +2076,7 @@ void ip6_update_csum(struct sk_buff * sk
        }
      }
  }
