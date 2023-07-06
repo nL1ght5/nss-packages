@@ -173,7 +173,7 @@ Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
  # #############################################################################
 --- a/ecm_db/ecm_db_connection.c
 +++ b/ecm_db/ecm_db_connection.c
-@@ -441,7 +441,9 @@ EXPORT_SYMBOL(ecm_db_connection_make_def
+@@ -446,7 +446,9 @@ EXPORT_SYMBOL(ecm_db_connection_make_def
   */
  void ecm_db_connection_data_totals_update(struct ecm_db_connection_instance *ci, bool is_from, uint64_t size, uint64_t packets)
  {
@@ -183,7 +183,7 @@ Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
  
  	DEBUG_CHECK_MAGIC(ci, ECM_DB_CONNECTION_INSTANCE_MAGIC, "%px: magic failed\n", ci);
  
-@@ -540,7 +542,9 @@ EXPORT_SYMBOL(ecm_db_connection_data_tot
+@@ -545,7 +547,9 @@ EXPORT_SYMBOL(ecm_db_connection_data_tot
   */
  void ecm_db_connection_data_totals_update_dropped(struct ecm_db_connection_instance *ci, bool is_from, uint64_t size, uint64_t packets)
  {
@@ -193,7 +193,7 @@ Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
  
  	DEBUG_CHECK_MAGIC(ci, ECM_DB_CONNECTION_INSTANCE_MAGIC, "%px: magic failed\n", ci);
  
-@@ -1526,6 +1530,7 @@ void ecm_db_connection_defunct_all(void)
+@@ -1539,6 +1543,7 @@ void ecm_db_connection_defunct_all(void)
  }
  EXPORT_SYMBOL(ecm_db_connection_defunct_all);
  
@@ -201,7 +201,7 @@ Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
  /*
   * ecm_db_connection_defunct_by_classifier()
   *	Make defunct based on masked fields
-@@ -1692,6 +1697,7 @@ next_ci:
+@@ -1705,6 +1710,7 @@ next_ci:
  				ECM_IP_ADDR_TO_OCTAL(dest_addr_mask), dest_port_mask, proto_mask, cnt);
  	}
  }
@@ -209,7 +209,7 @@ Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
  
  /*
   * ecm_db_connection_defunct_by_port()
-@@ -1981,6 +1987,7 @@ struct ecm_db_node_instance *ecm_db_conn
+@@ -1994,6 +2000,7 @@ struct ecm_db_node_instance *ecm_db_conn
  }
  EXPORT_SYMBOL(ecm_db_connection_node_get_and_ref);
  
@@ -217,7 +217,7 @@ Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
  /*
   * ecm_db_connection_mapping_get_and_ref_next()
   *	Return reference to next connection in the mapping chain in the specified direction.
-@@ -2022,6 +2029,7 @@ struct ecm_db_connection_instance *ecm_d
+@@ -2035,6 +2042,7 @@ struct ecm_db_connection_instance *ecm_d
  	return nci;
  }
  EXPORT_SYMBOL(ecm_db_connection_iface_get_and_ref_next);
@@ -301,7 +301,7 @@ Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
  	return false;
  }
  
-@@ -6928,6 +6934,7 @@ static void ecm_interface_regenerate_con
+@@ -7059,6 +7065,7 @@ static void ecm_interface_regenerate_con
  		return;
  	}
  
@@ -309,7 +309,7 @@ Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
  	for (dir = 0; dir < ECM_DB_OBJ_DIR_MAX; dir++) {
  		/*
  		 * Re-generate all connections associated with this interface
-@@ -6943,6 +6950,7 @@ static void ecm_interface_regenerate_con
+@@ -7074,6 +7081,7 @@ static void ecm_interface_regenerate_con
  			ci[dir] = cin;
  		}
  	}
@@ -319,7 +319,7 @@ Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
  	/*
 --- a/frontends/ecm_front_end_common.c
 +++ b/frontends/ecm_front_end_common.c
-@@ -471,6 +471,7 @@ bool ecm_front_end_gre_proto_is_accel_al
+@@ -479,6 +479,7 @@ bool ecm_front_end_gre_proto_is_accel_al
  							     struct nf_conntrack_tuple *tuple,
  							     int ip_version, uint16_t offset)
  {
@@ -327,7 +327,7 @@ Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
  	struct net_device *dev;
  	struct gre_base_hdr *greh;
  
-@@ -482,10 +483,12 @@ bool ecm_front_end_gre_proto_is_accel_al
+@@ -490,10 +491,12 @@ bool ecm_front_end_gre_proto_is_accel_al
  		/*
  		 * Case 1: PPTP locally terminated
  		 */
@@ -340,7 +340,7 @@ Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
  
  		/*
  		 * Case 2: PPTP pass through
-@@ -593,6 +596,10 @@ bool ecm_front_end_gre_proto_is_accel_al
+@@ -601,6 +604,10 @@ bool ecm_front_end_gre_proto_is_accel_al
  	 */
  	DEBUG_TRACE("%px: GRE IPv%d pass through - allow acceleration\n", skb, ip_version);
  	return true;

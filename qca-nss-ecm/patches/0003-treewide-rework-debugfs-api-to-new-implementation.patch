@@ -142,7 +142,7 @@ Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
  	/*
 --- a/ecm_db/ecm_db_connection.c
 +++ b/ecm_db/ecm_db_connection.c
-@@ -3776,11 +3776,8 @@ static struct file_operations ecm_db_con
+@@ -4378,11 +4378,8 @@ static struct file_operations ecm_db_con
   */
  bool ecm_db_connection_init(struct dentry *dentry)
  {
@@ -710,7 +710,7 @@ Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
  }
 --- a/frontends/sfe/ecm_sfe_ported_ipv4.c
 +++ b/frontends/sfe/ecm_sfe_ported_ipv4.c
-@@ -2026,21 +2026,11 @@ struct ecm_front_end_connection_instance
+@@ -2044,21 +2044,11 @@ struct ecm_front_end_connection_instance
   */
  bool ecm_sfe_ported_ipv4_debugfs_init(struct dentry *dentry)
  {
@@ -737,7 +737,7 @@ Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
  }
 --- a/frontends/sfe/ecm_sfe_ported_ipv6.c
 +++ b/frontends/sfe/ecm_sfe_ported_ipv6.c
-@@ -1973,21 +1973,11 @@ struct ecm_front_end_connection_instance
+@@ -1991,21 +1991,11 @@ struct ecm_front_end_connection_instance
   */
  bool ecm_sfe_ported_ipv6_debugfs_init(struct dentry *dentry)
  {

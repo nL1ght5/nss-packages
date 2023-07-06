@@ -102,7 +102,7 @@ Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
  	struct ecm_classifier_instance *aci;
  	struct ecm_classifier_rule_create ecrc;
  	uint32_t l2_accel_bits = (ECM_SFE_COMMON_FLOW_L2_ACCEL_ALLOWED | ECM_SFE_COMMON_RETURN_L2_ACCEL_ALLOWED);
-@@ -1287,9 +1289,13 @@ static void ecm_sfe_ported_ipv4_connecti
+@@ -1293,9 +1295,13 @@ static void ecm_sfe_ported_ipv4_connecti
  			nircm->tcp_rule.return_end = ct->proto.tcp.seen[return_dir].td_end;
  			nircm->tcp_rule.return_max_end = ct->proto.tcp.seen[return_dir].td_maxend;
  #ifdef ECM_OPENWRT_SUPPORT
@@ -129,7 +129,7 @@ Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
  	uint32_t l2_accel_bits = (ECM_SFE_COMMON_FLOW_L2_ACCEL_ALLOWED | ECM_SFE_COMMON_RETURN_L2_ACCEL_ALLOWED);
  	ecm_sfe_common_l2_accel_check_callback_t l2_accel_check;
  
-@@ -1248,9 +1250,13 @@ static void ecm_sfe_ported_ipv6_connecti
+@@ -1254,9 +1256,13 @@ static void ecm_sfe_ported_ipv6_connecti
  			nircm->tcp_rule.return_end = ct->proto.tcp.seen[return_dir].td_end;
  			nircm->tcp_rule.return_max_end = ct->proto.tcp.seen[return_dir].td_maxend;
  #ifdef ECM_OPENWRT_SUPPORT
