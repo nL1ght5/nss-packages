@@ -26,5 +26,5 @@ Subject: [PATCH] Fix Kernel Panic dma with NULL dev
 -		dma_sync_single_for_cpu(NULL, dma_addr + offset,
 +		dma_sync_single_for_cpu(nss_own->dev, dma_addr + offset,
  				sizeof(struct nss_log_entry), DMA_FROM_DEVICE);
- 		nss_info_always("%p: %s\n", nss_own, nle_print->message);
+ 		nss_info_always("%px: %s\n", nss_own, nle_print->message);
  		nle_print++;

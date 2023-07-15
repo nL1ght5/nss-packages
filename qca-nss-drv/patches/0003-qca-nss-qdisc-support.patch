@@ -1,6 +1,6 @@
 --- a/nss_core.c
 +++ b/nss_core.c
-@@ -1116,7 +1116,7 @@ static inline bool nss_core_handle_nr_fr
+@@ -1117,7 +1117,7 @@ static inline bool nss_core_handle_nr_fr
  		 * ingress shaped flag set.
  		 */
  		if (unlikely(desc->bit_flags & N2H_BIT_FLAG_INGRESS_SHAPED)) {
@@ -9,7 +9,7 @@
  		}
  #endif
  		goto pull;
-@@ -1156,7 +1156,7 @@ static inline bool nss_core_handle_nr_fr
+@@ -1157,7 +1157,7 @@ static inline bool nss_core_handle_nr_fr
  		 * ingress shaped flag set.
  		 */
  		if (unlikely(desc->bit_flags & N2H_BIT_FLAG_INGRESS_SHAPED)) {
@@ -18,7 +18,7 @@
  		}
  #endif
  
-@@ -1271,7 +1271,7 @@ static inline bool nss_core_handle_linea
+@@ -1272,7 +1272,7 @@ static inline bool nss_core_handle_linea
  		 * ingress shaped flag set.
  		 */
  		if (unlikely(desc->bit_flags & N2H_BIT_FLAG_INGRESS_SHAPED)) {
@@ -27,7 +27,7 @@
  		}
  #endif
  
-@@ -1329,7 +1329,7 @@ static inline bool nss_core_handle_linea
+@@ -1330,7 +1330,7 @@ static inline bool nss_core_handle_linea
  		 * ingress shaped flag set.
  		 */
  		if (unlikely(desc->bit_flags & N2H_BIT_FLAG_INGRESS_SHAPED)) {
