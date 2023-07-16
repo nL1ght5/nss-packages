@@ -1,6 +1,15 @@
 QSDK NSS Drivers
 ================
 
+* nss-clients:    NHSS.QSDK.11.2
+* nss-drv:        NHSS.QSDK.11.2
+    * firmware:   NHSS.QSDK.11.0 (NSS.AK.K.CS1-1-R)
+* nss-ecm:        NHSS.QSDK.12.1.0.6.r4
+* nss-crypto:     NHSS.QSDK.12.1.0.6.r4
+* nss-cfi:        NHSS.QSDK.12.1.r5_CS1
+* nss-gmac:       NHSS.QSDK.12.1.r5_CS1
+* qca-mcs:        NHSS.QSDK.12.1.r5_CS1
+
 This repo contains drivers required to activate and use the IPQ806x SoCs'
 NSS accelerator cores.
 
