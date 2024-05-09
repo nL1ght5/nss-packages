@@ -1,0 +1,26 @@
+--- a/ecm_interface.c	2024-05-09 09:05:49.741268323 +0000
++++ b/ecm_interface.c	2024-05-09 09:21:53.523295144 +0000
+@@ -8050,7 +8050,7 @@
+ {
+ 	struct msghdr msg;
+ 	struct iovec  iov;
+-#if (LINUX_VERSION_CODE < KERNEL_VERSION(6, 1, 0))
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(5, 15, 0))
+ 	mm_segment_t oldfs = get_fs();
+ #endif
+ 	int size;
+@@ -8063,12 +8063,12 @@
+ 	msg.msg_namelen = sizeof(struct sockaddr_nl);
+ 	msg.msg_control = NULL;
+ 	msg.msg_controllen = 0;
+-#if (LINUX_VERSION_CODE < KERNEL_VERSION(6, 1, 0))
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(5, 15, 0))
+ 	set_fs(KERNEL_DS);
+ #endif
+ 	iov_iter_init(&msg.msg_iter, READ, &iov, 1, len);
+ 	size = sock_recvmsg(sock, &msg, msg.msg_flags);
+-#if (LINUX_VERSION_CODE < KERNEL_VERSION(6, 1, 0))
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(5, 15, 0))
+ 	set_fs(oldfs);
+ #endif
+ 
