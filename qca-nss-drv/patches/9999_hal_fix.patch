@@ -1,0 +1,28 @@
+--- a/nss_hal/nss_hal.c	2024-05-05 17:32:24.782148643 +0000
++++ b/nss_hal/nss_hal.c	2024-05-05 17:43:04.279665501 +0000
+@@ -122,13 +122,25 @@
+ 	npd->qvpn_enabled = of_property_read_bool(np, "qcom,qvpn-enabled");
+ 	npd->rmnet_rx_enabled = of_property_read_bool(np, "qcom,rmnet_rx-enabled");
+ 	npd->shaping_enabled = of_property_read_bool(np, "qcom,shaping-enabled");
++#if (NSS_FW_VERSION_CODE > NSS_FW_VERSION(11,1))
++	npd->tls_enabled = of_property_read_bool(np, "qcom,tls-enabled");
++#endif
+ 	npd->tstamp_enabled = of_property_read_bool(np, "qcom,tstamp-enabled");
+ 	npd->turbo_frequency = of_property_read_bool(np, "qcom,turbo-frequency");
+ 	npd->tun6rd_enabled = of_property_read_bool(np, "qcom,tun6rd-enabled");
+ 	npd->tunipip6_enabled = of_property_read_bool(np, "qcom,tunipip6-enabled");
+ 	npd->vlan_enabled = of_property_read_bool(np, "qcom,vlan-enabled");
++#if (NSS_FW_VERSION_CODE > NSS_FW_VERSION(11,0))
++	npd->vxlan_enabled = of_property_read_bool(np, "qcom,vxlan-enabled");
++#endif
+ 	npd->wlanredirect_enabled = of_property_read_bool(np, "qcom,wlanredirect-enabled");
+ 	npd->wifioffload_enabled = of_property_read_bool(np, "qcom,wlan-dataplane-offload-enabled");
++#if (NSS_FW_VERSION_CODE > NSS_FW_VERSION(11,0))
++	npd->match_enabled = of_property_read_bool(np, "qcom,match-enabled");
++#endif
++#if (NSS_FW_VERSION_CODE > NSS_FW_VERSION(11,1))
++	npd->mirror_enabled = of_property_read_bool(np, "qcom,mirror-enabled");
++#endif
+ 	npd->igs_enabled = of_property_read_bool(np, "qcom,igs-enabled");
+ }
+ /*
