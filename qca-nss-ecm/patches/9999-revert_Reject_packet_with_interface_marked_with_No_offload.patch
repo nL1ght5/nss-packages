@@ -1,0 +1,92 @@
+diff --git a/ecm_interface.c b/ecm_interface.c
+index e7501ac..f9ca990 100644
+--- a/ecm_interface.c
++++ b/ecm_interface.c
+@@ -4776,7 +4776,7 @@ static inline bool ecm_interface_is_tunnel_endpoint(struct sk_buff *skb, struct
+ 		return true;
+ 	}
+ 
+-	if (protocol == IPPROTO_GRE || protocol == IPPROTO_ESP || protocol == IPPROTO_ETHERIP) {
++	if (protocol == IPPROTO_GRE || protocol == IPPROTO_ESP) {
+ 		return true;
+ 	}
+ 
+diff --git a/ecm_tracker.c b/ecm_tracker.c
+index db0d201..31e9e87 100644
+--- a/ecm_tracker.c
++++ b/ecm_tracker.c
+@@ -84,7 +84,6 @@ static bool ecm_tracker_ip_header_helper_udp(struct ecm_tracker_ip_protocols *et
+ static bool ecm_tracker_ip_header_helper_icmp(struct ecm_tracker_ip_protocols *etip, struct ecm_tracker_ip_protocol_header *etiph, struct ecm_tracker_ip_header *ip_hdr, struct sk_buff *skb, uint8_t protocol, ecm_tracker_ip_protocol_type_t ecm_ip_protocol, uint32_t offset, uint32_t remain, int16_t *next_hdr);
+ static bool ecm_tracker_ip_header_helper_unknown(struct ecm_tracker_ip_protocols *etip, struct ecm_tracker_ip_protocol_header *etiph, struct ecm_tracker_ip_header *ip_hdr, struct sk_buff *skb, uint8_t protocol, ecm_tracker_ip_protocol_type_t ecm_ip_protocol, uint32_t offset, uint32_t remain, int16_t *next_hdr);
+ static bool ecm_tracker_ip_header_helper_gre(struct ecm_tracker_ip_protocols *etip, struct ecm_tracker_ip_protocol_header *etiph, struct ecm_tracker_ip_header *ip_hdr, struct sk_buff *skb, uint8_t protocol, ecm_tracker_ip_protocol_type_t ecm_ip_protocol, uint32_t offset, uint32_t remain, int16_t *next_hdr);
+-static bool ecm_tracker_ip_header_helper_etherip(struct ecm_tracker_ip_protocols *etip, struct ecm_tracker_ip_protocol_header *etiph, struct ecm_tracker_ip_header *ip_hdr, struct sk_buff *skb, uint8_t protocol, ecm_tracker_ip_protocol_type_t ecm_ip_protocol, uint32_t offset, uint32_t remain, int16_t *next_hdr);
+ #ifdef ECM_IPV6_ENABLE
+ static bool ecm_tracker_ip_header_helper_ipv6_generic(struct ecm_tracker_ip_protocols *etip, struct ecm_tracker_ip_protocol_header *etiph, struct ecm_tracker_ip_header *ip_hdr, struct sk_buff *skb, uint8_t protocol, ecm_tracker_ip_protocol_type_t ecm_ip_protocol, uint32_t offset, uint32_t remain, int16_t *next_hdr);
+ static bool ecm_tracker_ip_header_helper_ipv6_fragment(struct ecm_tracker_ip_protocols *etip, struct ecm_tracker_ip_protocol_header *etiph, struct ecm_tracker_ip_header *ip_hdr, struct sk_buff *skb, uint8_t protocol, ecm_tracker_ip_protocol_type_t ecm_ip_protocol, uint32_t offset, uint32_t remain, int16_t *next_hdr);
+@@ -223,7 +222,7 @@ static struct ecm_tracker_ip_protocols {
+ 	{94, ECM_TRACKER_IP_PROTOCOL_TYPE_UNKNOWN, "94", ecm_tracker_ip_header_helper_unknown},
+ 	{95, ECM_TRACKER_IP_PROTOCOL_TYPE_UNKNOWN, "95", ecm_tracker_ip_header_helper_unknown},
+ 	{96, ECM_TRACKER_IP_PROTOCOL_TYPE_UNKNOWN, "96", ecm_tracker_ip_header_helper_unknown},
+-	{97, ECM_TRACKER_IP_PROTOCOL_TYPE_ETHERIP, "etherip", ecm_tracker_ip_header_helper_etherip},
++	{97, ECM_TRACKER_IP_PROTOCOL_TYPE_UNKNOWN, "97", ecm_tracker_ip_header_helper_unknown},
+ 	{98, ECM_TRACKER_IP_PROTOCOL_TYPE_UNKNOWN, "98", ecm_tracker_ip_header_helper_unknown},
+ 	{99, ECM_TRACKER_IP_PROTOCOL_TYPE_UNKNOWN, "99", ecm_tracker_ip_header_helper_unknown},
+ 	{100, ECM_TRACKER_IP_PROTOCOL_TYPE_UNKNOWN, "100", ecm_tracker_ip_header_helper_unknown},
+@@ -973,33 +972,6 @@ static bool ecm_tracker_ip_header_helper_udp(struct ecm_tracker_ip_protocols *et
+ 	return true;
+ }
+ 
+-/*
+- * ecm_tracker_ip_header_helper_etherip()
+- *	Interpret an Etherip header
+- */
+-static bool ecm_tracker_ip_header_helper_etherip(struct ecm_tracker_ip_protocols *etip, struct ecm_tracker_ip_protocol_header *etiph, struct ecm_tracker_ip_header *ip_hdr,
+-						struct sk_buff *skb, uint8_t protocol, ecm_tracker_ip_protocol_type_t ecm_ip_protocol, uint32_t offset, uint32_t remain, int16_t *next_hdr)
+-{
+-	DEBUG_ASSERT((protocol == IPPROTO_ETHERIP) && (ecm_ip_protocol == ECM_TRACKER_IP_PROTOCOL_TYPE_ETHERIP), "Bad protocol: %u or ecm_ip_protocol: %d", protocol, ecm_ip_protocol);
+-
+-	DEBUG_TRACE("etherip helper skb: %px, protocol: %u, ecm_ip_proto: %d, offset: %u, remain: %u\n", skb, protocol, ecm_ip_protocol, offset, remain);
+-	if (remain < 16) {
+-		DEBUG_TRACE("not enough Etherip header: %u\n", remain);
+-		return false;
+-	}
+-
+-	etiph->protocol_number = protocol;
+-	etiph->header_size = 16;
+-	etiph->size = remain;
+-	etiph->offset = offset;
+-
+-	/*
+-	 * There is no header following an Etherip header
+-	 */
+-	*next_hdr = -1;
+-	return true;
+-}
+-
+ /*
+  * ecm_tracker_ip_header_helper_unknown()
+  *	Interpret a unknown header
+diff --git a/ecm_tracker.h b/ecm_tracker.h
+index 4759e64..9293d6e 100644
+--- a/ecm_tracker.h
++++ b/ecm_tracker.h
+@@ -108,7 +108,6 @@ enum ecm_tracker_ip_protocol_types {
+ 	ECM_TRACKER_IP_PROTOCOL_TYPE_IPV6_DO,
+ 	ECM_TRACKER_IP_PROTOCOL_TYPE_IPV6_HBH,		/* IPv6 hop-by-hop header */
+ #endif
+-	ECM_TRACKER_IP_PROTOCOL_TYPE_ETHERIP,
+ 	ECM_TRACKER_IP_PROTOCOL_TYPE_COUNT		/* Must be last, do not use */
+ };
+ typedef enum ecm_tracker_ip_protocol_types ecm_tracker_ip_protocol_type_t;
+diff --git a/frontends/cmn/ecm_non_ported_ipv6.c b/frontends/cmn/ecm_non_ported_ipv6.c
+index fa13594..8ea8bac 100644
+--- a/frontends/cmn/ecm_non_ported_ipv6.c
++++ b/frontends/cmn/ecm_non_ported_ipv6.c
+@@ -122,7 +122,6 @@ static inline bool ecm_non_ported_ipv6_is_protocol_supported(int protocol)
+ #if defined(ECM_INTERFACE_GRE_TAP_ENABLE) || defined(ECM_INTERFACE_GRE_TUN_ENABLE)
+ 	case IPPROTO_GRE:
+ #endif
+-	case IPPROTO_ETHERIP:
+ 	case IPPROTO_RAW:
+ 		return true;
+ 	}
