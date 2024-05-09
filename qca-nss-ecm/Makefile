@@ -5,10 +5,10 @@ PKG_NAME:=qca-nss-ecm
 PKG_RELEASE:=1
 
 PKG_SOURCE_URL:=https://git.codelinaro.org/clo/qsdk/oss/lklm/qca-nss-ecm.git
-PKG_SOURCE_DATE:=2023-08-29
+PKG_SOURCE_DATE:=2024-02-05
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_VERSION:=61095f9c77cb041fa6d9d7b1bd304b55c86b5b99
-PKG_MIRROR_HASH:=ea12710ca03c6c0ac04b878fca08c4f549d23018b14d70c9e9f95fb630adda10
+PKG_SOURCE_VERSION:=db6e4816cc0e22fe846c76f584c453027d651b82
+PKG_MIRROR_HASH:=86fffb2287c011c770b116d9d7ffdb24efaa6d3a648eb23e0e520cfeaee93d0d
 PKG_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/package.mk
@@ -62,6 +62,7 @@ define AddDepends/qca-nss-ecm
 	+@NSS_DRV_WIFI_ENABLE \
 	+kmod-qca-nss-drv \
 	+kmod-nf-conntrack \
+        +kmod-vxlan \
 	+kmod-ppp +kmod-pppoe +kmod-pptp \
 	+PACKAGE_kmod-qca-mcs:kmod-qca-mcs \
 	+PACKAGE_kmod-pppol2tp:kmod-pppol2tp \
