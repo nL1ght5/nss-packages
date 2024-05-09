@@ -1,0 +1,11 @@
+--- a/ecm_types.h	2024-05-09 07:25:21.926331999 +0000
++++ b/ecm_types.h	2024-05-09 07:25:49.970394459 +0000
+@@ -464,7 +464,7 @@
+ static inline bool ecm_debugfs_create_u32(const char *name, umode_t mode,
+ 					  struct dentry *parent, u32 *value)
+ {
+-#if (LINUX_VERSION_CODE < KERNEL_VERSION(6, 1, 0))
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(5, 15, 0))
+ 	struct dentry *d = debugfs_create_u32(name, mode, parent, value);
+ 	if (!d) {
+ 		return false;
