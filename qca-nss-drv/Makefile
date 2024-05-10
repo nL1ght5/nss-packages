@@ -64,7 +64,7 @@ define KernelPackage/qca-nss-drv
 		+kmod-qca-nss-gmac
   TITLE:=Kernel driver for NSS (core driver)
   FILES:=$(PKG_BUILD_DIR)/qca-nss-drv.ko
-  AUTOLOAD:=$(call AutoLoad,32,qca-nss-drv,1)
+  AUTOLOAD:=$(call AutoLoad,32,qca-nss-drv)
 endef
 
 define KernelPackage/qca-nss-drv/config
