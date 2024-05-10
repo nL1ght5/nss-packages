@@ -19,7 +19,7 @@ define KernelPackage/qca-nss-gmac
   DEPENDS:=@TARGET_ipq806x||TARGET_ipq_ipq806x
   TITLE:=Kernel driver for NSS gmac
   FILES:=$(PKG_BUILD_DIR)/ipq806x/qca-nss-gmac.ko
-  AUTOLOAD:=$(call AutoLoad,31,qca-nss-gmac,1)
+  AUTOLOAD:=$(call AutoLoad,31,qca-nss-gmac)
 endef
 
 define KernelPackage/qca-nss-gmac/Description
