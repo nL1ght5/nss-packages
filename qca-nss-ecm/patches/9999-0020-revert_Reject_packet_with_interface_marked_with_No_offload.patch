@@ -1,0 +1,204 @@
+diff --git a/frontends/cmn/ecm_ipv4.c b/frontends/cmn/ecm_ipv4.c
+index 0ade726..7d233ce 100644
+--- a/frontends/cmn/ecm_ipv4.c
++++ b/frontends/cmn/ecm_ipv4.c
+@@ -1614,14 +1614,6 @@ static unsigned int ecm_ipv4_post_routing_hook(void *priv,
+ 
+ 	DEBUG_TRACE("%px: IPv4 CMN Routing: %s skb=%px\n", out, out->name, skb);
+ 
+-	/*
+-	 * Skip flow with out interface marked for don't offload.
+-	 */
+-	if (out->priv_flags_ext & IFF_EXT_HW_NO_OFFLOAD) {
+-		ecm_stats_v4_inc(ECM_STATS_V4_EXCEPTION_CMN, ECM_STATS_V4_EXCEPTION_ROUTE_OUT_IFF_NO_OFFLOAD);
+-		return NF_ACCEPT;
+-	}
+-
+ 	/*
+ 	 * If operations have stopped then do not process packets
+ 	 */
+@@ -1683,15 +1675,6 @@ static unsigned int ecm_ipv4_post_routing_hook(void *priv,
+ 		return NF_ACCEPT;
+ 	}
+ 
+-	/*
+-	 * Skip flow with source interface marked for don't offload.
+-	 */
+-	if (in->priv_flags_ext & IFF_EXT_HW_NO_OFFLOAD) {
+-		dev_put(in);
+-		ecm_stats_v4_inc(ECM_STATS_V4_EXCEPTION_CMN, ECM_STATS_V4_EXCEPTION_ROUTE_IN_IFF_NO_OFFLOAD);
+-		return NF_ACCEPT;
+-	}
+-
+ 	/*
+ 	 * Skip bridge flow packet
+ 	 */
+@@ -1837,14 +1820,6 @@ static unsigned int ecm_ipv4_bridge_post_routing_hook(void *priv,
+ 
+ 	DEBUG_TRACE("%px: IPv4 CMN Bridge: %s skb=%px\n", out, out->name, skb);
+ 
+-	/*
+-	 * Skip flow with out interface marked for don't offload.
+-	 */
+-	if (out->priv_flags_ext & IFF_EXT_HW_NO_OFFLOAD) {
+-		ecm_stats_v4_inc(ECM_STATS_V4_EXCEPTION_CMN, ECM_STATS_V4_EXCEPTION_BRIDGE_OUT_IFF_NO_OFFLOAD);
+-		return NF_ACCEPT;
+-	}
+-
+ 	/*
+ 	 * If operations have stopped then do not process packets
+ 	 */
+@@ -1932,17 +1907,6 @@ static unsigned int ecm_ipv4_bridge_post_routing_hook(void *priv,
+ 		ecm_stats_v4_inc(ECM_STATS_V4_EXCEPTION_CMN, ECM_STATS_V4_EXCEPTION_BRIDGE_LOCAL_PACKETS_IGNORED);
+ 		return NF_ACCEPT;
+ 	}
+-
+-	/*
+-	 * Skip flow with interface marked for don't offload.
+-	 */
+-	if (in->priv_flags_ext & IFF_EXT_HW_NO_OFFLOAD) {
+-		dev_put(bridge);
+-		dev_put(in);
+-		ecm_stats_v4_inc(ECM_STATS_V4_EXCEPTION_CMN, ECM_STATS_V4_EXCEPTION_BRIDGE_IN_IFF_NO_OFFLOAD);
+-		return NF_ACCEPT;
+-	}
+-
+ 	dev_put(in);
+ 
+ 	/*
+diff --git a/frontends/cmn/ecm_ipv6.c b/frontends/cmn/ecm_ipv6.c
+index 52dc7c1..549d1f5 100644
+--- a/frontends/cmn/ecm_ipv6.c
++++ b/frontends/cmn/ecm_ipv6.c
+@@ -1596,14 +1596,6 @@ static unsigned int ecm_ipv6_post_routing_hook(void *priv,
+ 
+ 	DEBUG_TRACE("%px: Routing: %s\n", out, out->name);
+ 
+-	/*
+-	 * Skip flow with interface marked for don't offload.
+-	 */
+-	if (out->priv_flags_ext & IFF_EXT_HW_NO_OFFLOAD) {
+-		ecm_stats_v6_inc(ECM_STATS_V6_EXCEPTION_CMN, ECM_STATS_V6_EXCEPTION_ROUTE_OUT_IFF_NO_OFFLOAD);
+-		return NF_ACCEPT;
+-	}
+-
+ 	/*
+ 	 * If operations have stopped then do not process packets
+ 	 */
+@@ -1665,15 +1657,6 @@ static unsigned int ecm_ipv6_post_routing_hook(void *priv,
+ 		return NF_ACCEPT;
+ 	}
+ 
+-	/*
+-	 * Skip flow with interface marked for don't offload.
+-	 */
+-	if (in->priv_flags_ext & IFF_EXT_HW_NO_OFFLOAD) {
+-		dev_put(in);
+-		ecm_stats_v6_inc(ECM_STATS_V6_EXCEPTION_CMN, ECM_STATS_V6_EXCEPTION_ROUTE_IN_IFF_NO_OFFLOAD);
+-		return NF_ACCEPT;
+-	}
+-
+ 	/*
+ 	 * Skip bridge flow packet
+ 	 */
+@@ -1819,14 +1802,6 @@ static unsigned int ecm_ipv6_bridge_post_routing_hook(void *priv,
+ 
+ 	DEBUG_TRACE("%px: IPv6 CMN Bridge: %s\n", out, out->name);
+ 
+-	/*
+-	 * Skip flow with interface marked for don't offload.
+-	 */
+-	if (out->priv_flags_ext & IFF_EXT_HW_NO_OFFLOAD) {
+-		ecm_stats_v6_inc(ECM_STATS_V6_EXCEPTION_CMN, ECM_STATS_V6_EXCEPTION_BRIDGE_OUT_IFF_NO_OFFLOAD);
+-		return NF_ACCEPT;
+-	}
+-
+ 	/*
+ 	 * If operations have stopped then do not process packets
+ 	 */
+@@ -1914,17 +1889,6 @@ static unsigned int ecm_ipv6_bridge_post_routing_hook(void *priv,
+ 		dev_put(bridge);
+ 		return NF_ACCEPT;
+ 	}
+-
+-	/*
+-	 * Skip flow with interface marked for don't offload.
+-	 */
+-	if (in->priv_flags_ext & IFF_EXT_HW_NO_OFFLOAD) {
+-		dev_put(bridge);
+-		dev_put(in);
+-		ecm_stats_v6_inc(ECM_STATS_V6_EXCEPTION_CMN, ECM_STATS_V6_EXCEPTION_BRIDGE_IN_IFF_NO_OFFLOAD);
+-		return NF_ACCEPT;
+-	}
+-
+ 	dev_put(in);
+ 
+ 	/*
+diff --git a/frontends/cmn/ecm_stats_v4.c b/frontends/cmn/ecm_stats_v4.c
+index 6713ca7..3ef2e36 100644
+--- a/frontends/cmn/ecm_stats_v4.c
++++ b/frontends/cmn/ecm_stats_v4.c
+@@ -80,10 +80,6 @@ static const char* ecm_stats_v4_exception_cmn_name_str[] = {
+ 	"v4_src_ip_not_ucast",
+ 	"v4_non_ported_not_supported",
+ 	"v4_non_ported_disabled",
+-	"v4_route_in_iff_offload_disabled",
+-	"v4_route_out_iff_offload_disabled",
+-	"v4_bridge_in_iff_offload_disabled",
+-	"v4_bridge_out_iff_offload_disabled",
+ };
+ 
+ static const char* ecm_stats_v4_exception_ported_name_str[] = {
+diff --git a/frontends/cmn/ecm_stats_v4.h b/frontends/cmn/ecm_stats_v4.h
+index aa71e17..bda6b82 100644
+--- a/frontends/cmn/ecm_stats_v4.h
++++ b/frontends/cmn/ecm_stats_v4.h
+@@ -99,14 +99,6 @@ enum ecm_stats_v4_exception_cmn_events {
+ 			/* Number of IPv4 packets ignored as nonported feature not supported */
+ 	ECM_STATS_V4_EXCEPTION_NON_PORTED_DISABLED,
+ 			/* Number of IPv4 packets ignored as nonported is disabled */
+-	ECM_STATS_V4_EXCEPTION_ROUTE_IN_IFF_NO_OFFLOAD,
+-			/* Number of Routed IPv4 packet ignored as input interface marked with no-offload */
+-	ECM_STATS_V4_EXCEPTION_ROUTE_OUT_IFF_NO_OFFLOAD,
+-			/* Number of Routed IPv4 packet ignored as output interface marked with no-offload */
+-	ECM_STATS_V4_EXCEPTION_BRIDGE_IN_IFF_NO_OFFLOAD,
+-			/* Number of Bridged IPv4 packet ignored as input interface marked with no-offload */
+-	ECM_STATS_V4_EXCEPTION_BRIDGE_OUT_IFF_NO_OFFLOAD,
+-			/* Number of Bridged IPv4 packet ignored as output interface marked with no-offload */
+ 	ECM_STATS_V4_EXCEPTION_CMN_MAX
+ 		/*Maximum common exceptions for IPv4 flows*/
+ 
+diff --git a/frontends/cmn/ecm_stats_v6.c b/frontends/cmn/ecm_stats_v6.c
+index 4bf0d48..759acc1 100644
+--- a/frontends/cmn/ecm_stats_v6.c
++++ b/frontends/cmn/ecm_stats_v6.c
+@@ -76,10 +76,6 @@ static const char* ecm_stats_v6_exception_name_str[] = {
+ 	"v6_src_ip_not_ucast",
+ 	"v6_non_ported_not_supported",
+ 	"v6_non_ported_disabled",
+-	"v6_route_in_iff_offload_disabled",
+-	"v6_route_out_iff_offload_disabled",
+-	"v6_bridge_in_iff_offload_disabled",
+-	"v6_bridge_out_iff_offload_disabled",
+ };
+ 
+ static const char* ecm_stats_v6_exception_ported_name_str[] = {
+diff --git a/frontends/cmn/ecm_stats_v6.h b/frontends/cmn/ecm_stats_v6.h
+index d9665e0..a3a35bc 100644
+--- a/frontends/cmn/ecm_stats_v6.h
++++ b/frontends/cmn/ecm_stats_v6.h
+@@ -97,14 +97,6 @@ enum ecm_stats_v6_exception_cmn_events {
+ 			/* Number of IPv6 packets ignored as nonported feature not supported */
+ 	ECM_STATS_V6_EXCEPTION_NON_PORTED_DISABLED,
+ 			/* Number of IPv6 packets ignored as nonported is disabled */
+-	ECM_STATS_V6_EXCEPTION_ROUTE_IN_IFF_NO_OFFLOAD,
+-			/* Number of routed IPv6 packet ignored as input interface marked with no-offload */
+-	ECM_STATS_V6_EXCEPTION_ROUTE_OUT_IFF_NO_OFFLOAD,
+-			/* Number of routed IPv6 packet ignored as output interface marked with no-offload */
+-	ECM_STATS_V6_EXCEPTION_BRIDGE_IN_IFF_NO_OFFLOAD,
+-			/* Number of bridged IPv6 packet ignored as input interface marked with no-offload */
+-	ECM_STATS_V6_EXCEPTION_BRIDGE_OUT_IFF_NO_OFFLOAD,
+-			/* Number of bridged IPv6 packet ignored as output interface marked with no-offload */
+ 	ECM_STATS_V6_EXCEPTION_CMN_MAX
+ 			/*Maximum common exceptions for IPv6 flows*/
+ };

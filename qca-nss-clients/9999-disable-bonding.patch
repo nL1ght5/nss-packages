@@ -1,0 +1,9 @@
+--- a/vlan/Makefile	2024-05-06 06:47:04.822809961 +0000
++++ b/vlan/Makefile	2024-05-06 06:47:26.922861657 +0000
+@@ -12,5 +12,5 @@
+ ccflags-y += -Werror
+ 
+ ifneq (,$(filter $(CONFIG_BONDING),y m))
+-ccflags-y += -DBONDING_SUPPORT
++#ccflags-y += -DBONDING_SUPPORT
+ endif
