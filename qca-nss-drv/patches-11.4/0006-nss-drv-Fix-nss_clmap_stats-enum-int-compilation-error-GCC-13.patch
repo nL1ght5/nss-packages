@@ -1,6 +1,6 @@
 --- a/nss_clmap_stats.c
 +++ b/nss_clmap_stats.c
-@@ -64,7 +64,7 @@
+@@ -63,7 +63,7 @@ void nss_clmap_stats_session_unregister(
   * nss_clmap_stats_session_register
   * 	Register debug statistic for clmap session.
   */
