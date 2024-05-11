@@ -1,0 +1,15 @@
+--- a/vxlanmgr/nss_vxlanmgr_tun_stats.c	2024-05-10 23:25:03.001607638 +0000
++++ b/vxlanmgr/nss_vxlanmgr_tun_stats.c	2024-05-10 23:25:44.293705425 +0000
+@@ -167,10 +167,12 @@
+ 		stats_msg->dropped_malformed;
+ 	stats[NSS_VXLANMGR_TUN_STATS_TYPE_DROP_NEXT_NODE_QUEUE_FULL] +=
+ 		stats_msg->dropped_next_node_queue_full;
++#if (NSS_FW_VERSION_CODE >= NSS_FW_VERSION(11,4))
+ 	stats[NSS_VXLANMGR_TUN_STATS_TYPE_EXCEPT_INNER_HASH] +=
+ 		stats_msg->except_inner_hash;
+ 	stats[NSS_VXLANMGR_TUN_STATS_TYPE_DECAP_IPSEC_SRC_INVALID] +=
+ 		stats_msg->decap_ipsec_src_err;
++#endif
+ }
+ 
+ /*

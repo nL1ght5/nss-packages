@@ -1,0 +1,76 @@
+--- a/netlink/nss_nlipv4.c	2024-05-10 15:09:02.231329083 +0000
++++ b/netlink/nss_nlipv4.c	2024-05-10 22:56:34.433947117 +0000
+@@ -51,7 +51,9 @@
+ #include "nss_ipsecmgr.h"
+ #include "nss_nl.h"
+ #include "nss_nlcmn_if.h"
++#ifdef __NSS_NLGRE_REDIR_CMD_H
+ #include "nss_nlgre_redir_cmd.h"
++#endif
+ #include "nss_nlipsec_if.h"
+ #include "nss_nlipsec.h"
+ #include "nss_nlipv4_if.h"
+@@ -336,6 +338,7 @@
+ 							tuple->return_ident, tuple->flow_ident);
+ 		break;
+ 
++#if (NSS_FW_VERSION_CODE >= NSS_FW_VERSION(11,4))
+ 	case NSS_NL_IFTYPE_TUNNEL_GRE:
+ 		/*
+ 		 * Currently this implementation is only for gre_redir
+@@ -349,6 +352,7 @@
+ 
+ 		conn->flow_mtu = nss_nlgre_redir_cmd_get_mtu(flow_dev, NSS_GRE_REDIR_IP_HDR_TYPE_IPV4, conn->flow_interface_num);
+ 		break;
++#endif
+ 
+ 	case NSS_NL_IFTYPE_VLAN:
+ 		conn->flow_interface_num = nss_cmn_get_interface_number_by_dev(vlan_dev_real_dev(flow_dev));
+@@ -396,6 +400,7 @@
+ 							tuple->return_ident, tuple->flow_ident);
+ 		break;
+ 
++#if (NSS_FW_VERSION_CODE >= NSS_FW_VERSION(11,4))
+ 	case NSS_NL_IFTYPE_TUNNEL_GRE:
+ 		conn->return_interface_num = nss_nlgre_redir_cmd_get_ifnum(return_dev, tuple->protocol);
+ 		if (conn->return_interface_num < 0 ) {
+@@ -406,6 +411,7 @@
+ 
+ 		conn->return_mtu = nss_nlgre_redir_cmd_get_mtu(return_dev, NSS_GRE_REDIR_IP_HDR_TYPE_IPV4, conn->return_interface_num);
+ 		break;
++#endif
+ 
+ 	case NSS_NL_IFTYPE_VLAN:
+ 		conn->return_interface_num = nss_cmn_get_interface_number_by_dev(vlan_dev_real_dev(return_dev));
+@@ -622,6 +628,7 @@
+ 	return 0;
+ }
+ 
++#if (NSS_FW_VERSION_CODE >= NSS_FW_VERSION(11,4))
+ /*
+  * nss_nlipv4_verify_identifier()
+  *	verify and override identifier rule entries
+@@ -642,6 +649,7 @@
+ 
+ 	return 0;
+ }
++#endif
+ 
+ /*
+  * nss_nlipv4_process_notify()
+@@ -822,6 +830,7 @@
+ 		goto done;
+ 	}
+ 
++#if (NSS_FW_VERSION_CODE >= NSS_FW_VERSION(11,4))
+ 	/*
+ 	 * check identifier
+ 	 */
+@@ -830,6 +839,7 @@
+ 		nss_nl_error("%d:invalid identifier rule information passed\n", pid);
+ 		goto done;
+ 	}
++#endif
+ 
+ 	/*
+ 	 * copy the NL message for response

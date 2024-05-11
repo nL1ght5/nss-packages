@@ -1,0 +1,77 @@
+--- a/netlink/nss_nlipv6.c	2024-05-10 14:53:33.057334336 +0000
++++ b/netlink/nss_nlipv6.c	2024-05-10 22:55:09.773759034 +0000
+@@ -51,7 +51,9 @@
+ #include "nss_ipsecmgr.h"
+ #include "nss_nl.h"
+ #include "nss_nlcmn_if.h"
++#ifdef __NSS_NLGRE_REDIR_CMD_H
+ #include "nss_nlgre_redir_cmd.h"
++#endif
+ #include "nss_nlipsec.h"
+ #include "nss_nlipsec_if.h"
+ #include "nss_nlipv6.h"
+@@ -353,6 +355,7 @@
+ 							tuple->return_ident, tuple->flow_ident);
+ 		break;
+ 
++#ifdef __NSS_NLGRE_REDIR_CMD_H
+ 	case NSS_NL_IFTYPE_TUNNEL_GRE:
+ 		conn->flow_interface_num = nss_nlgre_redir_cmd_get_ifnum(flow_dev, tuple->protocol);
+ 		if (conn->flow_interface_num < 0 ) {
+@@ -363,6 +366,7 @@
+ 
+ 		conn->flow_mtu = nss_nlgre_redir_cmd_get_mtu(flow_dev, NSS_GRE_REDIR_IP_HDR_TYPE_IPV6, conn->flow_interface_num);
+ 		break;
++#endif
+ 
+ 	case NSS_NL_IFTYPE_VLAN:
+ 		conn->flow_interface_num = nss_cmn_get_interface_number_by_dev(vlan_dev_real_dev(flow_dev));
+@@ -411,6 +415,7 @@
+ 							tuple->return_ident, tuple->flow_ident);
+ 		break;
+ 
++#ifdef __NSS_NLGRE_REDIR_CMD_H
+ 	case NSS_NL_IFTYPE_TUNNEL_GRE:
+ 		conn->return_interface_num = nss_nlgre_redir_cmd_get_ifnum(return_dev, tuple->protocol);
+ 		if (conn->return_interface_num < 0 ) {
+@@ -421,6 +426,7 @@
+ 
+ 		conn->return_mtu = nss_nlgre_redir_cmd_get_mtu(return_dev, NSS_GRE_REDIR_IP_HDR_TYPE_IPV6, conn->return_interface_num);
+ 		break;
++#endif
+ 
+ 	case NSS_NL_IFTYPE_VLAN:
+ 		conn->return_interface_num = nss_cmn_get_interface_number_by_dev(vlan_dev_real_dev(return_dev));
+@@ -623,6 +629,7 @@
+ 	return 0;
+ }
+ 
++#if (NSS_FW_VERSION_CODE >= NSS_FW_VERSION(11,4))
+ /*
+  * nss_nlipv6_verify_identifier()
+  *	verify and override identifier rule entries
+@@ -643,6 +650,7 @@
+ 
+ 	return 0;
+ }
++#endif
+ 
+ /*
+  * nss_nlipv6_process_notify()
+@@ -816,6 +824,7 @@
+ 		goto done;
+ 	}
+ 
++#if (NSS_FW_VERSION_CODE >= NSS_FW_VERSION(11,4))
+ 	/*
+ 	 * check identifier
+ 	 */
+@@ -824,6 +833,8 @@
+ 		nss_nl_error("%d:invalid identifier rule information passed\n", pid);
+ 		goto done;
+ 	}
++#endif
++
+ 
+ 	/*
+ 	 * copy the NL message for response

@@ -1,0 +1,28 @@
+--- a/vxlanmgr/nss_vxlanmgr_tunnel.c	2024-05-10 23:21:24.549099878 +0000
++++ b/vxlanmgr/nss_vxlanmgr_tunnel.c	2024-05-10 23:24:13.781489922 +0000
+@@ -323,7 +323,9 @@
+ 	union vxlan_addr *remote_ip, *src_ip;
+ 	uint32_t i, inner_ifnum;
+ 	uint32_t new_src_ip[4] = {0};
++#if (NSS_FW_VERSION_CODE >= NSS_FW_VERSION(11,4))
+ 	int32_t ipsec_if_num;
++#endif
+ 	nss_tx_status_t status = NSS_TX_FAILURE;
+ 
+ 	dev = vfe->dev;
+@@ -379,6 +381,7 @@
+ 		memcpy(mac_add_msg->encap.src_ip, new_src_ip, sizeof(struct in6_addr));
+ 	}
+ 
++#if (NSS_FW_VERSION_CODE >= NSS_FW_VERSION(11,4))
+ 	/*
+ 	 * Check if this is a VxLAN over IPsec use case. If so, we need to bind the IPsec interface to the VxLAN.
+ 	 * When the IPsec interface is deleted in NSS, user is expected to bring the vxlan interface down as well, thereby flushing the MAC entries in NSS.
+@@ -389,6 +392,7 @@
+ 		mac_add_msg->flags = mac_add_msg->flags | NSS_VXLAN_MAC_ENABLE_IPSEC_BIND;
+ 		nss_vxlanmgr_trace("%px: VxLAN interface is bound to IPsec interface with if_num(0x%x)\n", dev, ipsec_if_num);
+ 	}
++#endif
+ 
+ 	/*
+ 	 * Send MAC add message asynchronously as it is called by chain

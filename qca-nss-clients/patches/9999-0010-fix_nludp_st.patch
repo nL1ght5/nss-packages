@@ -1,0 +1,95 @@
+--- a/netlink/nss_nl.c	2024-05-10 14:31:08.622652545 +0000
++++ b/netlink/nss_nl.c	2024-05-10 22:44:43.780369904 +0000
+@@ -35,8 +35,10 @@
+ #include "nss_nlcmn_if.h"
+ #include "nss_nldtls.h"
+ #include "nss_nldtls_if.h"
++#ifdef NSS_DRV_GRE_REDIR_ENABLE
+ #include "nss_nlgre_redir_if.h"
+ #include "nss_nlgre_redir_family.h"
++#endif
+ #include "nss_nlipsec.h"
+ #include "nss_nlipsec_if.h"
+ #include "nss_nlipv4.h"
+@@ -67,18 +69,24 @@
+ #include "nss_nlwifili_if.h"
+ #include "nss_nllso_rx.h"
+ #include "nss_nllso_rx_if.h"
++#ifdef __NSS_NLMAP_T_H
+ #include "nss_nlmap_t.h"
+ #include "nss_nlmap_t_if.h"
++#endif
+ #include "nss_nlpppoe.h"
+ #include "nss_nlpppoe_if.h"
+ #include "nss_nll2tpv2.h"
+ #include "nss_nll2tpv2_if.h"
+ #include "nss_nlpptp.h"
+ #include "nss_nlpptp_if.h"
++#ifdef __NSS_NLUDP_ST_H
+ #include "nss_nludp_st.h"
+ #include "nss_nludp_st_if.h"
++#endif
++#ifdef __NSS_NLQRFS_H
+ #include "nss_nlqrfs.h"
+ #include "nss_nlqrfs_if.h"
++#endif
+ 
+ /*
+  * nss_nl.c
+@@ -135,6 +143,7 @@
+ 		.exit = NSS_NLIPV6_EXIT,		/* exit */
+ 		.valid = CONFIG_NSS_NLIPV6		/* 1 or 0 */
+ 	},
++#ifdef __NSS_NLGRE_REDIR_FAMILY_H
+ 	{
+ 		/*
+ 		 * NSS_NLGRE_REDIR
+@@ -144,6 +153,7 @@
+ 		.exit = NSS_NLGRE_REDIR_FAMILY_EXIT,	/* exit */
+ 		.valid = CONFIG_NSS_NLGRE_REDIR_FAMILY	/* 1 or 0 */
+ 	},
++#endif
+ 	{
+ 		/*
+ 		 * NSS_NLCAPWAP
+@@ -252,6 +262,7 @@
+ 		.exit = NSS_NLLSO_RX_EXIT,		/* exit */
+ 		.valid = CONFIG_NSS_NLLSO_RX		/* 1 or 0 */
+ 	},
++#ifdef __NSS_NLMAP_T_H
+ 	{
+ 		/*
+ 		 * NSS_NLMAP_T
+@@ -261,6 +272,7 @@
+ 		.exit = NSS_NLMAP_T_EXIT,		/* exit */
+ 		.valid = CONFIG_NSS_NLMAP_T		/* 1 or 0 */
+ 	},
++#endif
+ 	{
+ 		/*
+ 		 * NSS_NLPPPOE
+@@ -288,6 +300,7 @@
+ 		.exit = NSS_NLPPTP_EXIT,		/* exit */
+ 		.valid = CONFIG_NSS_NLPPTP		/* 1 or 0 */
+ 	},
++#ifdef __NSS_NLUDP_ST_H
+ 	{
+                 /*
+                  * NSS_NLUDP_ST
+@@ -297,6 +310,8 @@
+                 .exit = NSS_NLUDP_ST_EXIT,               /* exit */
+                 .valid = CONFIG_NSS_NLUDP_ST             /* 1 or 0 */
+         },
++#endif
++#ifdef __NSS_NLQRFS_H
+ 	{
+                 /*
+                  * NSS_NLQRFS
+@@ -306,6 +321,7 @@
+                 .exit = NSS_NLQRFS_EXIT,               /* exit */
+                 .valid = CONFIG_NSS_NLQRFS             /* 1 or 0 */
+         },
++#endif
+ 
+ 
+ };
