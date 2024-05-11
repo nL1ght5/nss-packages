@@ -4,10 +4,10 @@ include $(INCLUDE_DIR)/kernel.mk
 PKG_NAME:=qca-nss-clients
 PKG_RELEASE:=2
 PKG_SOURCE_URL:=https://git.codelinaro.org/clo/qsdk/oss/lklm/nss-clients.git
-PKG_SOURCE_DATE:=2020-10-29
+PKG_SOURCE_DATE:=2023-10-04
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_VERSION:=ef082a735fad96bd2f6f59b94d6ea81defc4796e
-PKG_MIRROR_HASH:=9375f2bbdd17826b6ddebc77607ec73c98626570243a9831a1e34e1051eb436c
+PKG_SOURCE_VERSION:=f058ae199b42f30be9925b2ed1ce53afb128200c
+PKG_MIRROR_HASH:=90401b577a7750d3b7eadb423700aab7e1da1af392637598e08f6007f23a92e1
 PKG_BUILD_DEPENDS:=qca-nss-drv
 PKG_BUILD_PARALLEL:=1
 
@@ -406,45 +406,45 @@ define KernelPackage/qca-nss-drv-clmapmgr/description
 Kernel module for managing NSS clmap
 endef
 
-# define KernelPackage/qca-nss-drv-vxlanmgr
-#   SECTION:=kernel
-#   CATEGORY:=Kernel modules
-#   SUBMENU:=Network Devices
-#   DEPENDS:=+@NSS_DRV_VXLAN_ENABLE +kmod-vxlan +PACKAGE_kmod-qca-nss-drv:kmod-qca-nss-drv
-#   TITLE:=NSS VxLAN Manager for QCA NSS driver
-#   FILES:=$(PKG_BUILD_DIR)/vxlanmgr/qca-nss-vxlanmgr.ko
-#   AUTOLOAD:=$(call AutoLoad,51,qca-nss-vxlanmgr)
-# endef
+define KernelPackage/qca-nss-drv-vxlanmgr
+  SECTION:=kernel
+  CATEGORY:=Kernel modules
+  SUBMENU:=Network Devices
+  DEPENDS:=+@NSS_DRV_VXLAN_ENABLE +kmod-vxlan +PACKAGE_kmod-qca-nss-drv:kmod-qca-nss-drv
+  TITLE:=NSS VxLAN Manager for QCA NSS driver
+  FILES:=$(PKG_BUILD_DIR)/vxlanmgr/qca-nss-vxlanmgr.ko
+  AUTOLOAD:=$(call AutoLoad,51,qca-nss-vxlanmgr)
+endef
 
-# define KernelPackage/qca-nss-drv-vxlanmgr/description
-# Kernel module for managing NSS VxLAN
-# endef
+define KernelPackage/qca-nss-drv-vxlanmgr/description
+Kernel module for managing NSS VxLAN
+endef
 
-# define KernelPackage/qca-nss-drv-match
-#  SECTION:=kernel
-#  CATEGORY:=Kernel modules
-#  SUBMENU:=Network Devices
-#  DEPENDS:=+@NSS_DRV_MATCH_ENABLE +PACKAGE_kmod-qca-nss-drv:kmod-qca-nss-drv
-#  TITLE:=NSS Match for QCA NSS driver
-#  FILES:=$(PKG_BUILD_DIR)/match/qca-nss-match.ko
-# endef
+define KernelPackage/qca-nss-drv-match
+ SECTION:=kernel
+ CATEGORY:=Kernel modules
+ SUBMENU:=Network Devices
+ DEPENDS:=+@NSS_DRV_MATCH_ENABLE +PACKAGE_kmod-qca-nss-drv:kmod-qca-nss-drv
+ TITLE:=NSS Match for QCA NSS driver
+ FILES:=$(PKG_BUILD_DIR)/match/qca-nss-match.ko
+endef
 
-# define KernelPackage/qca-nss-drv-match/description
-# Kernel module for managing NSS Match
-# endef
+define KernelPackage/qca-nss-drv-match/description
+Kernel module for managing NSS Match
+endef
 
-# define KernelPackage/qca-nss-drv-mirror
-#  SECTION:=kernel
-#  CATEGORY:=Kernel modules
-#  SUBMENU:=Network Devices
-#  TITLE:=Module for mirroring packets from NSS to host.
-#  DEPENDS:=+@NSS_DRV_MIRROR_ENABLE +PACKAGE_kmod-qca-nss-drv:kmod-qca-nss-drv
-#  FILES:=$(PKG_BUILD_DIR)/mirror/qca-nss-mirror.ko
-# endef
+define KernelPackage/qca-nss-drv-mirror
+ SECTION:=kernel
+ CATEGORY:=Kernel modules
+ SUBMENU:=Network Devices
+ TITLE:=Module for mirroring packets from NSS to host.
+ DEPENDS:=+@NSS_DRV_MIRROR_ENABLE +PACKAGE_kmod-qca-nss-drv:kmod-qca-nss-drv
+ FILES:=$(PKG_BUILD_DIR)/mirror/qca-nss-mirror.ko
+endef
 
-# define KernelPackage/qca-nss-drv-mirror/Description
-# Kernel module for managing NSS Mirror
-# endef
+define KernelPackage/qca-nss-drv-mirror/Description
+Kernel module for managing NSS Mirror
+endef
 
 # define KernelPackage/qca-nss-drv-capwapmgr
 #  SECTION:=kernel
@@ -604,18 +604,18 @@ ifneq ($(CONFIG_PACKAGE_kmod-qca-nss-drv-clmapmgr),)
 MAKE_OPTS+=clmapmgr=y
 endif
 
-# ifneq ($(CONFIG_PACKAGE_kmod-qca-nss-drv-vxlanmgr),)
-# MAKE_OPTS+=vxlanmgr=y
-# EXTRA_CFLAGS += -DNSS_VXLAN_ENABLED
-# endif
+ifneq ($(CONFIG_PACKAGE_kmod-qca-nss-drv-vxlanmgr),)
+MAKE_OPTS+=vxlanmgr=y
+EXTRA_CFLAGS += -DNSS_VXLAN_ENABLED
+endif
 
-# ifneq ($(CONFIG_PACKAGE_kmod-qca-nss-drv-match),)
-# MAKE_OPTS+=match=y
-# endif
+ifneq ($(CONFIG_PACKAGE_kmod-qca-nss-drv-match),)
+MAKE_OPTS+=match=y
+endif
 
-# ifneq ($(CONFIG_PACKAGE_kmod-qca-nss-drv-mirror),)
-# MAKE_OPTS+=mirror=y
-# endif
+ifneq ($(CONFIG_PACKAGE_kmod-qca-nss-drv-mirror),)
+MAKE_OPTS+=mirror=y
+endif
 
 # ifneq ($(CONFIG_PACKAGE_kmod-qca-nss-drv-capwapmgr),)
 # MAKE_OPTS+=capwapmgr=y
@@ -658,7 +658,7 @@ $(eval $(call KernelPackage,qca-nss-drv-ovpn-link))
 $(eval $(call KernelPackage,qca-nss-drv-pvxlanmgr))
 $(eval $(call KernelPackage,qca-nss-drv-eogremgr))
 $(eval $(call KernelPackage,qca-nss-drv-clmapmgr))
-# $(eval $(call KernelPackage,qca-nss-drv-vxlanmgr)) # NSS FW > 11.0
-# $(eval $(call KernelPackage,qca-nss-drv-match)) # NSS FW > 11.0
-# $(eval $(call KernelPackage,qca-nss-drv-mirror)) # NSS FW > 11.1
+$(eval $(call KernelPackage,qca-nss-drv-vxlanmgr)) # NSS FW > 11.0
+$(eval $(call KernelPackage,qca-nss-drv-match)) # NSS FW > 11.0
+$(eval $(call KernelPackage,qca-nss-drv-mirror)) # NSS FW > 11.1
 # $(eval $(call KernelPackage,qca-nss-drv-capwapmgr)) # NSS FW > 11.3
