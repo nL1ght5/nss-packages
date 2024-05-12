@@ -5,10 +5,10 @@ PKG_RELEASE:=7
 
 PKG_SOURCE_URL:=https://git.codelinaro.org/clo/qsdk/oss/lklm/nss-drv.git
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_DATE:=2024-01-04
-PKG_SOURCE_VERSION:=89cc01b
-PKG_MIRROR_HASH:=24bfa74463ae2c49ecffc3f299fb3dd71c723bc89f3c7306648d2a7cb2dceaab
-QSDK_VERSION:=12.2
+PKG_SOURCE_DATE:=2023-12-27
+PKG_SOURCE_VERSION:=2b4d6c82f9d74595ccde65547448260aa5046535
+PKG_MIRROR_HASH:=4444c15e19226597d8e984e97ac13b71609318c0ad9611ee02fee24bb971699a
+QSDK_VERSION:=12.4.r4
 PKG_VERSION:=$(QSDK_VERSION)-$(PKG_SOURCE_DATE)-$(PKG_SOURCE_VERSION)
 
 PKG_BUILD_PARALLEL:=1
@@ -80,8 +80,8 @@ define KernelPackage/qca-nss-drv
   CATEGORY:=Kernel modules
   SUBMENU:=Network Devices
   DEPENDS:=@(TARGET_ipq806x||TARGET_qualcommax||TARGET_ipq807x||TARGET_ipq60xx) \
-  				 +!TARGET_ipq806x:kmod-qca-nss-dp \
-  				 +TARGET_qualcommax_ipq807x:nss-firmware-ipq8074
+	  			 +kmod-qca-nss-gmac
+#  				 +!TARGET_ipq806x:kmod-qca-nss-dp 
   TITLE:=Kernel driver for NSS (core driver)
   FILES:=$(PKG_BUILD_DIR)/qca-nss-drv.ko
   AUTOLOAD:=$(call AutoLoad,32,qca-nss-drv)
@@ -96,12 +96,14 @@ define KernelPackage/qca-nss-drv/install
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_DIR) $(1)/etc/hotplug.d/firmware
 	$(INSTALL_DIR) $(1)/usr/bin
+	$(INSTALL_DIR) $(1)/lib/firmware
 
 	$(INSTALL_BIN) ./files/qca-nss-drv.init $(1)/etc/init.d/qca-nss-drv
 	$(INSTALL_BIN) ./files/qca-nss-drv.uci $(1)/etc/config/nss
 	$(INSTALL_BIN) ./files/qca-nss-drv.hotplug $(1)/etc/hotplug.d/firmware/10-qca-nss-fw
 	$(INSTALL_BIN) ./files/qca-nss-drv.debug $(1)/usr/bin/nss_stats
-
+	$(INSTALL_DATA) ./files/nss-firmware/qca-nss0-retail.bin $(1)/lib/firmware/qca-nss0.bin
+	$(INSTALL_DATA) ./files/nss-firmware/qca-nss1-retail.bin $(1)/lib/firmware/qca-nss1.bin
 endef
 
 define KernelPackage/qca-nss-drv/Description
@@ -114,6 +116,8 @@ ifeq ($(CONFIG_TARGET_SUBTARGET), "ipq807x")
 else ifeq ($(CONFIG_TARGET_SUBTARGET), "ipq60xx")
   SOC="ipq60xx_64"
   subtarget:=$(CONFIG_TARGET_SUBTARGET)
+else 
+  SOC=$(CONFIG_TARGET_BOARD)
 endif
 
 define Build/InstallDev
@@ -126,7 +130,16 @@ endef
 
 EXTRA_CFLAGS+= -I$(STAGING_DIR)/usr/include/qca-nss-dp \
 			   -I$(STAGING_DIR)/usr/include/qca-ssdk \
+			   -I$(STAGING_DIR)/usr/include/qca-nss-gmac \
 			   -Wno-unused-variable -Wno-enum-conversion
+
+# Keeping default as ipq806x for branches that does not have subtarget framework
+ifeq ($(CONFIG_TARGET_ipq),y)
+subtarget:=$(SUBTARGET)
+else
+subtarget:=$(CONFIG_TARGET_BOARD)
+endif
+
 
 ifdef CONFIG_NSS_MEM_PROFILE_MEDIUM
   EXTRA_CFLAGS += -DNSS_MEM_PROFILE_MEDIUM
