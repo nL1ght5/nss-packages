@@ -14,7 +14,7 @@
  							tuple->return_ident, tuple->flow_ident);
  		break;
  
-+#ifdef __NSS_NLGRE_REDIR_CMD_H
++#if (CONFIG_NSS_NLGRE_REDIR_FAMILY == 1)
  	case NSS_NL_IFTYPE_TUNNEL_GRE:
  		conn->flow_interface_num = nss_nlgre_redir_cmd_get_ifnum(flow_dev, tuple->protocol);
  		if (conn->flow_interface_num < 0 ) {
@@ -30,7 +30,7 @@
  							tuple->return_ident, tuple->flow_ident);
  		break;
  
-+#ifdef __NSS_NLGRE_REDIR_CMD_H
++#if (CONFIG_NSS_NLGRE_REDIR_FAMILY == 1)
  	case NSS_NL_IFTYPE_TUNNEL_GRE:
  		conn->return_interface_num = nss_nlgre_redir_cmd_get_ifnum(return_dev, tuple->protocol);
  		if (conn->return_interface_num < 0 ) {
@@ -46,7 +46,7 @@
  	return 0;
  }
  
-+#if (NSS_FW_VERSION_CODE >= NSS_FW_VERSION(11,4))
++#if (CONFIG_NSS_NLGRE_REDIR_FAMILY == 1)
  /*
   * nss_nlipv6_verify_identifier()
   *	verify and override identifier rule entries
@@ -62,7 +62,7 @@
  		goto done;
  	}
  
-+#if (NSS_FW_VERSION_CODE >= NSS_FW_VERSION(11,4))
++#if (CONFIG_NSS_NLGRE_REDIR_FAMILY == 1)
  	/*
  	 * check identifier
  	 */

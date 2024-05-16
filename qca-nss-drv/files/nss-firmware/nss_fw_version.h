@@ -2,7 +2,7 @@
 #define __NSS_FW_VERSION_H
 
 #define NSS_FW_VERSION_MAJOR 11
-#define NSS_FW_VERSION_MINOR 4
+#define NSS_FW_VERSION_MINOR 2
 
 #define NSS_FW_VERSION(a,b) (((a) << 8) + (b))
 
