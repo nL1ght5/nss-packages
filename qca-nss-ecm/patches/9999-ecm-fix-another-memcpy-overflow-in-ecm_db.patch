@@ -1,0 +1,22 @@
+--- a/ecm_db/ecm_db.c	2024-05-16 15:54:02.179959734 +0000
++++ b/ecm_db/ecm_db.c	2024-05-16 15:55:33.904169077 +0000
+@@ -307,7 +307,8 @@
+ 		 * Compute ECM connection's prefix destination address by masking it with the
+ 		 * route config's destination address prefix length.
+ 		 */
+-		ipv6_addr_prefix(&prefix_addr, &ecm_in6, min(128, cfg->fc_dst_len));
++		//ipv6_addr_prefix(&prefix_addr, &ecm_in6, min(128, cfg->fc_dst_len));
++		ipv6_addr_prefix(&prefix_addr, &ecm_in6, max(0,min(128, cfg->fc_dst_len)));
+ 
+ 		DEBUG_TRACE("dest addr prefix: %pI6 prefix_len: %d ecm_in6: %pI6\n", &prefix_addr, cfg->fc_dst_len, &ecm_in6);
+ 
+@@ -335,7 +336,8 @@
+ 			 * Compute ECM connection's prefix source address by masking it with the
+ 			 * route config's destination address prefix length.
+ 			 */
+-			ipv6_addr_prefix(&prefix_addr, &ecm_in6, min(128, cfg->fc_dst_len));
++			//ipv6_addr_prefix(&prefix_addr, &ecm_in6, min(128, cfg->fc_dst_len));
++			ipv6_addr_prefix(&prefix_addr, &ecm_in6, max(0,min(128, cfg->fc_dst_len)));
+ 
+ 			DEBUG_TRACE("src addr prefix: %pI6 prefix_len: %d ecm_in6: %pI6\n", &prefix_addr, cfg->fc_dst_len, &ecm_in6);
+ 
